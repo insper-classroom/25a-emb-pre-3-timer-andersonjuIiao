@@ -86,10 +86,6 @@ int main() {
         }
 
         if (flag_g) {
-            flag_g = 0;
-        }
-
-        if (flag_g) {
 
             if(g_timer_green){
                 gpio_put(LED_PIN_G,!gpio_get(LED_PIN_G));
