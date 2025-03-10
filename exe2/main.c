@@ -93,7 +93,7 @@ int main() {
             }
         }
         else if(!flag_g){
-            gpio_put(LED_PIN_R,0);
+            gpio_put(LED_PIN_G,0);
         }
     
     }
