@@ -7,6 +7,8 @@ const int LED_PIN_R = 4;
 
 volatile int flag_f_r = 0;
 
+volatile bool timer_fired = false;
+
 void btn_callback(uint gpio, uint32_t events) {
     if (events == 0x4) { // fall edge
         if (gpio == BTN_PIN_R)
@@ -16,6 +18,11 @@ void btn_callback(uint gpio, uint32_t events) {
         if (gpio == BTN_PIN_R)
             flag_f_r = 0;
     }
+}
+
+int64_t alarm_callback(alarm_id_t id, void *user_data) {
+    timer_fired = true;
+    return 0;
 }
 
 int main() {
@@ -31,9 +38,26 @@ int main() {
     gpio_set_irq_enabled_with_callback(
         BTN_PIN_R, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &btn_callback);
 
-    while (true) {
+    alarm_id_t alarm;
 
+    int led_status_r = 0;
+    
+    while (true) {
+        
         if (flag_f_r) {
+            
+            add_alarm_in_ms(500, alarm_callback, NULL, false);
+
+            if(timer_fired){
+                led_status_r = !led_status_r;
+                gpio_put(LED_PIN_R, led_status_r);
+                timer_fired = false;
+                flag_f_r = 0;
+            }
+        }
+        if (!flag_f_r && timer_fired) {
+            cancel_alarm(alarm);
+            timer_fired = false;
         }
     }
 }
