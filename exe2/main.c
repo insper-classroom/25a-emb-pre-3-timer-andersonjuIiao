@@ -72,6 +72,7 @@ int main() {
             else if (timer_red){
                 cancel_repeating_timer(&timer_r);
                 timer_red = false;
+                gpio_put(LED_PIN_R, 0);
             }
             flag_r = 0;
         }
@@ -89,6 +90,7 @@ int main() {
             else if (timer_green){
                 cancel_repeating_timer(&timer_g);
                 timer_green = false;
+                gpio_put(LED_PIN_G, 0);
             }
             flag_g = 0;
         }
